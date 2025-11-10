@@ -4,6 +4,8 @@
   data-template="vertical-menu-template-free">
 
 <head>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
   <meta charset="utf-8" />
   <meta name="viewport"
     content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
@@ -23,31 +25,44 @@
     rel="stylesheet" />
 
   <!-- Icons. Uncomment required icon fonts -->
-  <link rel="stylesheet" href="../assets/vendor/fonts/boxicons.css" />
+  <link rel="stylesheet" href="{{ asset('assets/vendor/fonts/boxicons.css') }}" />
 
   <!-- Core CSS -->
-  <link rel="stylesheet" href="../assets/vendor/css/core.css" class="template-customizer-core-css" />
-  <link rel="stylesheet" href="../assets/vendor/css/theme-default.css" class="template-customizer-theme-css" />
-  <link rel="stylesheet" href="../assets/css/demo.css" />
+  <link rel="stylesheet" href="{{ asset('assets/vendor/css/core.css') }}" class="template-customizer-core-css" />
+  <link rel="stylesheet" href="{{ asset('assets/vendor/css/theme-default.css') }}"
+    class="template-customizer-theme-css" />
+  <link rel="stylesheet" href="{{ asset('assets/css/demo.css') }}" />
 
   <!-- Vendors CSS -->
-  <link rel="stylesheet" href="../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
+  <link rel="stylesheet" href="{{ asset('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css') }}" />
 
-  <link rel="stylesheet" href="../assets/vendor/libs/apex-charts/apex-charts.css" />
+  <link rel="stylesheet" href="{{ asset('assets/vendor/libs/apex-charts/apex-charts.css') }}" />
 
   <!-- Page CSS -->
 
   <!-- Helpers -->
-  <script src="../assets/vendor/js/helpers.js"></script>
+  <script src="{{ asset('assets/vendor/js/helpers.js') }}"></script>
 
   <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
   <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
-  <script src="../assets/js/config.js"></script>
+  <script src="{{ asset('assets/js/config.js') }}"></script>
 
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
+  @if (session('success'))
+    <script>
+      Swal.fire({
+        icon: 'success',
+        title: 'Berhasil',
+        text: '{{ session('success') }}',
+        showConfirmButton: false,
+        timer: 2000
+      });
+    </script>
+  @endif
+
   <!-- Layout wrapper -->
   <div class="layout-wrapper layout-content-navbar">
     <div class="layout-container">
@@ -57,7 +72,7 @@
         <div class="app-brand demo py-5">
           <a href="" class="app-brand-link">
             <span class="app-brand-logo demo">
-              <img src="{{ asset('logosklh.png') }}" alt="" width="55" height="55" class="me-2" />
+              <img src="{{ asset('assets/img/storage/Store_icon.jpeg') }}" alt="" width="55" height="55" class="me-2" />
             </span>
             <span class="app-brand-text demo menu-text fw-bolder ms-2 text-capitalize">TOKO</span>
           </a>
@@ -72,7 +87,7 @@
         <ul class="menu-inner py-1 mt-3">
           <!-- Dashboard -->
           <li class="menu-item {{ Request::is('dashboard*') ? 'active' : '' }}">
-            <a href="/dashboard/index" class="menu-link">
+            <a href="/dashboard" class="menu-link">
               <i class="menu-icon tf-icons bx bx-tachometer"></i>
               <div data-i18n="Analytics">Dashboard</div>
             </a>
@@ -85,10 +100,17 @@
             <li class="menu-item {{ Request::is('') ? 'active' : '' }}">
               <a href="" class="menu-link">
                 <i class="menu-icon tf-icons bx bx-user"></i>
-                <div data-i18n="Basic">Pengguna</div>
+                <div data-i18n="Basic">Data Kasir</div>
               </a>
             </li>
           @endif
+
+          <li class="menu-item {{ Request::is('users*') ? 'active' : '' }}">
+            <a href="/users" class="menu-link">
+              <i class="menu-icon tf-icons bx bx-group"></i>
+              <div data-i18n="Basic">Data User</div>
+            </a>
+          </li>
 
           <li class="menu-item {{ Request::is('barang*') ? 'active' : '' }}">
             <a href="/barang" class="menu-link">
@@ -98,27 +120,33 @@
           </li>
 
           <li class="menu-header small text-uppercase"><span class="menu-header-text">Transaksi</span></li>
-          <li class="menu-item {{ Request::is('') ? 'active' : '' }}">
-            <a href="" class="menu-link">
+          <li class="menu-item {{ Request::is('transaksi*') ? 'active' : '' }}">
+            <a href="/transaksi" class="menu-link">
               <i class="menu-icon tf-icons bx bx-food-menu"></i>
               <div data-i18n="Basic">Transaksi</div>
             </a>
           </li>
+
           <li class="menu-header small text-uppercase"><span class="menu-header-text">Laporan</span></li>
-          <li class="menu-item {{ Request::is('') ? 'active' : '' }}">
-            <a href="" class="menu-link">
+          <li class="menu-item {{ Request::is('transaksi.daftar*') ? 'active' : '' }}">
+            <a href="{{ route('transaksi.daftar') }}" class="menu-link">
               <i class="menu-icon tf-icons bx bx-food-menu"></i>
               <div data-i18n="Basic">Riwayat Transaksi</div>
             </a>
           </li>
+
           <div style="display: flex; flex-direction: column; flex: 0.95;"></div>
-          <li class="menu-item ">
-            <form action="/logout" href="javascript:void" method="POST" id="formLogout">@csrf</form>
-            <a onclick="window.logout()" class="menu-link" style="background: #e9eaec;">
+          <li class="menu-item {{ Request::is('logout*') ? 'active' : '' }}">
+            <a href="#" class="menu-link" id="logoutButton">
               <i class="menu-icon tf-icons bx bx-file"></i>
               <div data-i18n="Basic">Logout</div>
             </a>
           </li>
+
+          <form id="logoutForm" action="{{ route('logout') }}" method="POST" style="display: none;">
+            @csrf
+          </form>
+
         </ul>
       </aside>
       <!-- / Menu -->
@@ -284,25 +312,45 @@
 
   <!-- Core JS -->
   <!-- build:js assets/vendor/js/core.js -->
-  <script src="../assets/vendor/libs/jquery/jquery.js"></script>
-  <script src="../assets/vendor/libs/popper/popper.js"></script>
-  <script src="../assets/vendor/js/bootstrap.js"></script>
-  <script src="../assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
+  <script src="{{ asset('assets/vendor/libs/jquery/jquery.js') }}"></script>
+  <script src="{{ asset('assets/vendor/libs/popper/popper.js') }}"></script>
+  <script src="{{ asset('assets/vendor/js/bootstrap.js') }}"></script>
+  <script src="{{ asset('assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js') }}"></script>
 
-  <script src="../assets/vendor/js/menu.js"></script>
+  <script src="{{ asset('assets/vendor/js/menu.js') }}"></script>
   <!-- endbuild -->
 
   <!-- Vendors JS -->
-  <script src="../assets/vendor/libs/apex-charts/apexcharts.js"></script>
+  <script src="{{ asset('assets/vendor/libs/apex-charts/apexcharts.js') }}"></script>
 
   <!-- Main JS -->
-  <script src="../assets/js/main.js"></script>
+  <script src="{{ asset('assets/js/main.js') }}"></script>
 
   <!-- Page JS -->
-  <script src="../assets/js/dashboards-analytics.js"></script>
+  <script src="{{ asset('assets/js/dashboards-analytics.js') }}"></script>
 
   <!-- Place this tag in your head or just before your close body tag. -->
   <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script>
+    document.getElementById('logoutButton').addEventListener('click', function (e) {
+      e.preventDefault();
+      Swal.fire({
+        title: 'Apakah anda yakin ingin logout?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Ya, logout',
+        cancelButtonText: 'Batal'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          document.getElementById('logoutForm').submit();
+        }
+      });
+    });
+  </script>
 </body>
 
 </html>

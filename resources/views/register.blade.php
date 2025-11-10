@@ -131,7 +131,7 @@
                       </g>
                     </svg>
                   </span>
-                  <span class="app-brand-text demo text-body fw-bolder">SD-BIC</span>
+                  <span class="app-brand-text demo text-body fw-bolder">APLIKASI KASIR</span>
                 </a>
               </div>
               <!-- /Logo -->
@@ -141,12 +141,16 @@
               <form id="formAuthentication" class="mb-3" action="{{ route('register') }}" method="POST">
                 @csrf
                 <div class="mb-3">
-                  <label for="username" class="form-label">Username</label>
-                  <input type="text" class="form-control" name="name" placeholder="Enter your username" autofocus/>
+                  <label for="username" class="form-label">Nama Pengguna</label>
+                  <input type="text" class="form-control" name="name" placeholder="Masukkan nama pengguna" autofocus/>
+                </div>
+                <div class="mb-3">
+                  <label for="store_name" class="form-label">Nama Toko</label>
+                  <input type="text" class="form-control" name="store_name" placeholder="Masukkan nama toko">
                 </div>
                 <div class="mb-3">
                   <label for="email" class="form-label">Email</label>
-                  <input type="text" class="form-control" name="email" placeholder="Enter your email" />
+                  <input type="text" class="form-control" name="email" placeholder="Masukkan email anda" />
                 </div>
                 <div class="mb-3 form-password-toggle">
                   <label class="form-label" for="password">Password</label>
@@ -154,10 +158,6 @@
                     <input type="password" class="form-control" name="password" placeholder="&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;&#xb7;" aria-describedby="password"/>
                     <span class="input-group-text cursor-pointer"><i class="bx bx-hide"></i></span>
                   </div>
-                </div>
-                <div class="mb-3">
-                  <label for="role" class="form-label">Hak Akses</label>
-                  <input type="text" class="form-control" name="role" placeholder="Masukan hak akses anda" autofocus/>
                 </div>
 
                 <div class="mb-3">

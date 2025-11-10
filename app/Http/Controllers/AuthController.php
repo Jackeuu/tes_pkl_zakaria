@@ -9,7 +9,8 @@ use App\Models\User;
 
 class AuthController extends Controller
 {
-    public function ShowLoginForm(){
+    public function ShowLoginForm()
+    {
         return view('login');
     }
 
@@ -18,27 +19,28 @@ class AuthController extends Controller
         $credentials = $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required'],
-        ],[
-            'required' => ':atribut tidak boleh kosong.',
-            'email.email' => 'Email yang anda masukkan tidak valid.',
         ]);
 
-        if(Auth::attempt($credentials,$request->filled('remember'))){
+        if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
-            return redirect()->intended(route('dashboard'));
+            return redirect('/dashboard');
         }
 
         return back()->with('error', 'Email atau password salah!');
     }
 
-    public function logout(Request $request){
+
+
+    public function logout(Request $request)
+    {
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         return redirect('/login');
     }
 
-    public function ShowRegisterForm(){
+    public function ShowRegisterForm()
+    {
         return view('register');
     }
 
@@ -46,16 +48,16 @@ class AuthController extends Controller
     {
         $request->validate([
             'name' => 'required',
+            'store_name' => 'required',
             'email' => 'required|email|unique:users',
             'password' => 'required',
-            'role' => 'required',
         ]);
 
         $user = User::create([
             'name' => $request->name,
+            'store_name' => $request->store_name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role' => $request->role,
         ]);
 
         return redirect('/login')->with('success', 'Registrasi berhasil! Silakan login.');
